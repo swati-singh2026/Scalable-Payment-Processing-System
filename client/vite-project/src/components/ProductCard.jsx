@@ -1,10 +1,10 @@
-export default function ProductCard({ products, addToCard }) {
+export default function ProductCard({ product, addToCart }) {
   return (
-    <div className="border p-4 rounded shadow bg-white">
-      <h3 className="text-lg font-semibold">{products.name}</h3>
-      <p>${products.price}</p>
+    <div className="border p-4 ">
+      <h3 className="text-lg font-semibold">{product.name}</h3>
+      <p>${product.price}</p>
       <button
-        onClick={() => addToCart(products)}
+        onClick={() => addToCart(product)}
         className="mt-2 bg-blue-600 text-white px-3 py-1 rounded"
       >
         Add to Cart

@@ -1,6 +1,6 @@
 /* Cart */
 
-export default function cart({ cart, removeItem }) {
+export default function Cart({ cart, removeItem }) {
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   return (
     <div className="mt-6">
