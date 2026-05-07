@@ -1,6 +1,10 @@
+const razorpay = require("./razorpay");
 const express = require("express");
+require("dotenv").config();
+console.log("Razorpay Test API Key:", process.env.RAZORPAY_TEST_KEY);
+console.log("Razorpay Test Secret Key:", process.env.RAZORPAY_TEST_SECRET);
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.use(express.json());
 //Api-Test
 app.get("/", (req, res) => {
@@ -29,6 +33,21 @@ async function run() {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!",
     );
+    app.post("/create-order", async (req, res) => {
+      try {
+        const options = {
+          amount: 50000,
+          currency: "INR",
+          receipt: "receipt#1",
+        };
+        const order = await razorpay.orders.create(options);
+        res.json(order);
+      } catch (error) {
+        console.error("Error creating order:", error);
+        res.status(500).json({ error: "Failed to create order" });
+      }
+    });
+
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
