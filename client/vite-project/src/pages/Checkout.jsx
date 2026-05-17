@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 export default function Checkout({ cart }) {
   const navigate = useNavigate();
@@ -62,7 +63,10 @@ export default function Checkout({ cart }) {
           </div>
         )}
       </div>
-      
+      <div>
+        <h1> Razorpay Payment</h1>
+        <button onClick={handlePayment}>Pay Now</button>
+      </div>
     </div>
   );
 }
