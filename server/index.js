@@ -1,10 +1,12 @@
 const razorpay = require("./razorpay");
 const express = require("express");
+const cors = require("cors");
 require("dotenv").config();
 console.log("Razorpay Test API Key:", process.env.RAZORPAY_TEST_KEY);
 console.log("Razorpay Test Secret Key:", process.env.RAZORPAY_TEST_SECRET);
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.use(cors());
 app.use(express.json());
 //Api-Test
 app.get("/", (req, res) => {
@@ -35,21 +37,30 @@ async function run() {
     );
     app.post("/create-order", async (req, res) => {
       try {
+        console.log("BODY =", req.body);
+        const amount = Number(req.body.amount);
+        if (!amount || amount <= 0) {
+          return res.status(500).json({
+            error: "Invalid amount",
+          });
+        }
         const options = {
-          amount: 50000,
+          amount: 1 * 100,
           currency: "INR",
-          receipt: "receipt#1",
+          receipt: "receipt_order",
         };
         const order = await razorpay.orders.create(options);
         res.json(order);
       } catch (error) {
-        console.error("Error creating order:", error);
-        res.status(500).json({ error: "Failed to create order" });
+        console.log("RAZORPAY ERROR =", error);
+        res.status(500).json({
+          error: "Server Error",
+        });
       }
     });
 
     app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Server running on http://127.0.0.1:${PORT}`);
     });
   } finally {
     // Ensures that the client will close when you finish/error

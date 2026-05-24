@@ -5,9 +5,9 @@ import Cart from "../components/Cart";
 import { useNavigate } from "react-router-dom";
 export default function Home({ cart, setCart }) {
   const products = [
-    { id: 1, name: "Laptop", price: 50000 },
-    { id: 2, name: "Smartphone", price: 20000 },
-    { id: 3, name: "Tablet", price: 30000 },
+    { id: 1, name: "Laptop", price: 50 },
+    { id: 2, name: "Smartphone", price: 20 },
+    { id: 3, name: "Tablet", price: 30 },
   ];
 
   const navigate = useNavigate();

@@ -1,15 +1,56 @@
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 export default function Checkout({ cart }) {
   const navigate = useNavigate();
   const total = cart.reduce((total, item) => total + item.price * item.qty, 0);
-  const handlePayment = () => {
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
-      return;
-    }
+  const handlePayment = async () => {
+    try {
+      const amount = total > 0 ? total : 500;
+      const apiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:5000/create-order";
 
-    alert(`Proceeding to payment of ₹${total}`);
+      console.log("Creating order", { amount, apiUrl });
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to create order");
+      }
+
+      const order = await response.json();
+
+      if (!window.Razorpay) {
+        alert("Razorpay SDK is not loaded. Please refresh the page.");
+        return;
+      }
+
+      const options = {
+        key: "rzp_test_SmL7NiqXstHBPR",
+        amount: order.amount,
+        currency: order.currency,
+        name: "Scalable Payment Processing System",
+        description: "Test Transaction",
+        order_id: order.id,
+        handler: function (response) {
+          alert("Payment Successful!");
+          console.log("clicked", response);
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const razor = new window.Razorpay(options);
+      razor.open();
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("Unable to start payment. Check the browser console for details.");
+    }
   };
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -20,8 +61,7 @@ export default function Checkout({ cart }) {
             <p>Your cart is empty.</p>
             <button
               onClick={handlePayment}
-              disabled
-              className="mt-6 w-full bg-gray-300 text-white px-4 py-2 rounded cursor-not-allowed"
+              className="mt-6 w-full bg-gray-300 text-white px-4 py-2 rounded"
             >
               Pay Now
             </button>
@@ -62,10 +102,6 @@ export default function Checkout({ cart }) {
             </button>
           </div>
         )}
-      </div>
-      <div>
-        <h1> Razorpay Payment</h1>
-        <button onClick={handlePayment}>Pay Now</button>
       </div>
     </div>
   );
