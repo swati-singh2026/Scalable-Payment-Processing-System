@@ -1,0 +1,14 @@
+{
+  "name": "scalable-payment-processing-system",
+  "version": "1.0.0",
+  "description": "PayFlux - Scalable Payment Processing System",
+  "private": true,
+  "scripts": {
+    "client": "npm --prefix client run dev",
+    "server": "npm --prefix server run dev",
+    "dev": "concurrently \"npm run client\" \"npm run server\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.4"
+  }
+}

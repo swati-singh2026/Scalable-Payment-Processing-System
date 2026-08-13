@@ -1,4 +1,13 @@
 {
+  "name": "payment-system-server",
+  "version": "1.0.0",
+  "description": "Backend for PayFlux - Scalable Payment Processing System",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -6,5 +15,8 @@
     "mongodb": "^7.2.0",
     "mongoose": "^9.5.0",
     "razorpay": "^2.9.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }
