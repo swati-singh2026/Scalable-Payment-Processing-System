@@ -11,14 +11,27 @@ export const verifyPayment = async (req, res) => {
       currency,
     } = req.body;
 
-    // Verify Signature
+    console.log("========== VERIFY PAYMENT REQUEST ==========");
+    console.log("Order ID:", razorpay_order_id);
+    console.log("Payment ID:", razorpay_payment_id);
+    console.log("Signature received:", !!razorpay_signature);
+    console.log("Amount:", amount);
+    console.log("Currency:", currency);
+    console.log("============================================");
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing Razorpay payment details",
+      });
+    }
+
     const isValid = verifySignature(
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
     );
 
-    // Save Transaction
     const transaction = await Transaction.create({
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
@@ -44,7 +57,7 @@ export const verifyPayment = async (req, res) => {
   } catch (error) {
     console.error("Verification Error:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
     });
